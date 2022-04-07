@@ -180,17 +180,16 @@ var pageInit = 0;
 var consoles = []
 
 function initInputSelect() {
-    for (var i = 0; i < presets.length; i++){
+    //push all console names from JSON files
+    for (var i = 0; i < presets.length; i++) {
         consoles.push(presets[i].console)
     }
+    //filter out non-unique items
     consoles = consoles.filter(onlyUnique)
-    
-
+    //set placeholder description
     document.getElementById("desc").textContent = "Select a system and then preset";
     var div = document.createElement("outputandconsole");
-
     var main = document.createElement("select");
-    
     for (var i = 0; i < maxMainInput; i++) {
         var option  = document.createElement("option");
         option.value = i;
@@ -201,10 +200,13 @@ function initInputSelect() {
     div.appendChild(main);
 
     var main = document.createElement("select");
+
+    //add placeholder option
     var option  = document.createElement("option");
         option.value = -1;
-        option.text = "select a console";
+        option.text = "All";
         main.add(option);
+    //add console filter options    
     for (var i = 0; i < consoles.length; i++) {
         var option  = document.createElement("option");
         option.value = i;
@@ -215,22 +217,20 @@ function initInputSelect() {
     main.addEventListener("change", chooseConsole);
     div.appendChild(main);
 
+    //add preset drop down menu
     var main = document.createElement("select");
-    var option  = document.createElement("option");
-        option.value = -1;
-        option.text = "";
-        main.add(option);
     main.id = "presetsName";
     main.addEventListener("change", selectInput);
     div.appendChild(main);
 
     var divInputCfg = document.getElementById("divInputCfg");
     divInputCfg.appendChild(div);
+    //populate preset list with all options by default
+    populateConsolePresets(undefined);
 }
 
 function initOutputMapping() {
     /* Save */
-    console.log("initoutputSelect")
     divSave = document.createElement("saveButton");
 
     var btn = document.createElement("button");
@@ -294,9 +294,10 @@ function getMapList(url) {
     });
 }
 
+//standard function to filter out non-unique items from an array
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
-  }
+}
 
 function initBlueRetroCfg() {
     getMapList('https://api.github.com/repos/delislej/BlueRetroWebCfg/contents/map/')
@@ -372,24 +373,23 @@ function writeInputCfg(cfgId, cfg) {
  }
 
 function saveInput() {
+    //get consoleName and preset name
     var preset = Number(document.getElementById("presetsName").value);
     var consoleName = Number(document.getElementById("consoleName").value);
-    if(preset != -1 && consoleName != -1){
+    //make sure preset is not placeholder before we do anything
+    if (preset != -1) {
 
         document.getElementById("inputSaveText").style.display = 'none';
-        
-        console.log(presets[preset])
         var nbMapping = presets[preset].map.length;
         var cfgSize = nbMapping*8 + 3;
         var cfg = new Uint8Array(cfgSize);
         var cfgId = Number(document.getElementById("inputSelect").value);
-
         var j = 0;
         cfg[j++] = 0;
         cfg[j++] = 0;
         cfg[j++] = nbMapping;
 
-        log('Input: '+ cfgId + 'Preset: ' + preset);
+        log('Input: '+ cfgId + "\n" + 'Preset: ' + preset);
         for (var i = 0; i < nbMapping; i++) {
             cfg[j++] = btn[presets[preset].map[i][0]];
             cfg[j++] = btn[presets[preset].map[i][1]];
@@ -451,43 +451,47 @@ function btConn() {
 }
 
 function selectInput() {
-    console.log("selectInput")
-    console.log(Number(document.getElementById("presetsName").value))
-    console.log(Number(document.getElementById("consoleName").value))
-    if(Number(document.getElementById("presetsName").value) == -1 || Number(document.getElementById("consoleName").value) == -1)
-    {
-        document.getElementById("desc").textContent = "select a console and preset!";
+    //only change the description if selected input is not the placeholder
+    if (Number(document.getElementById("presetsName").value) == -1) {
+        document.getElementById("desc").textContent = "Select a console and preset!";
     }
-    else{
+    else {
         document.getElementById("desc").textContent = presets[Number(this.value)].desc;
     }
-    
 }
 
-function clearConsolePresets(){
-
-var presetsList = document.getElementById("presetsName");
-var presetsListLength = presetsList.length;
-for (i = 0; i < presetsListLength; i++){
-    presetsList.remove(0);
-}
-document.getElementById("desc").textContent = "select a console and preset!";
-}
-
-function populateConsolePresets(selectedConsole){
-var list = document.getElementById("presetsName")
-list.add(new Option("Select preset", -1));
-for(i = 0; i < presets.length; i++){
-    if(presets[i].console === selectedConsole){
-        list.add(new Option(presets[i].name, i));
+function clearConsolePresets() {
+    //clear the presets list then change the description to "select a console and preset!"
+    var presetsList = document.getElementById("presetsName");
+    var presetsListLength = presetsList.length;
+    for (i = 0; i < presetsListLength; i++) {
+        presetsList.remove(0);
     }
+    document.getElementById("desc").textContent = "Select a console and preset!";
 }
+
+function populateConsolePresets(selectedConsole) {
+    //add "select preset first as -1 to prevent trying to save the placeholder"
+    var list = document.getElementById("presetsName")
+    list.add(new Option("Select preset", -1));
+    //add presets to the list that match the selected console type
+    if (selectedConsole != undefined) {
+        for (i = 0; i < presets.length; i++) {
+            if (presets[i].console === selectedConsole) {
+                list.add(new Option(presets[i].name, i));
+            }
+        }
+    }
+    //no filter selected, show whole preset list
+    else {
+        for (i = 0; i < presets.length; i++) {
+            list.add(new Option(presets[i].name, i));
+        }
+    }
 }
 
 function chooseConsole(e) {
-    console.log(e.target.value)
+    //when changing consoles we clear the presets list and populate it with presets from the newly selected system
     clearConsolePresets()
     populateConsolePresets(consoles[e.target.value])
-    
-    
 }
