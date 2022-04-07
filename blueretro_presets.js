@@ -190,7 +190,6 @@ function initInputSelect() {
     document.getElementById("desc").textContent = "Select a system and then preset";
     var div = document.createElement("outputandconsole");
     var main = document.createElement("select");
-
     for (var i = 0; i < maxMainInput; i++) {
         var option  = document.createElement("option");
         option.value = i;
@@ -201,6 +200,7 @@ function initInputSelect() {
     div.appendChild(main);
 
     var main = document.createElement("select");
+
     //add placeholder option
     var option  = document.createElement("option");
         option.value = -1;
@@ -216,6 +216,7 @@ function initInputSelect() {
     main.id = "consoleName";
     main.addEventListener("change", chooseConsole);
     div.appendChild(main);
+
     //add preset drop down menu
     var main = document.createElement("select");
     main.id = "presetsName";
@@ -275,6 +276,7 @@ function fetchMap(presets, files, idx) {
             reject(error);
         });
     });
+    
 }
 
 function getMapList(url) {
@@ -298,7 +300,7 @@ function onlyUnique(value, index, self) {
 }
 
 function initBlueRetroCfg() {
-    getMapList('https://api.github.com/repos/darthcloud/BlueRetroWebCfg/contents/map/')
+    getMapList('https://api.github.com/repos/delislej/BlueRetroWebCfg/contents/map/')
     .then(files => {
         return fetchMap(presets, files, 0);
     })
@@ -310,6 +312,7 @@ function initBlueRetroCfg() {
     .catch(error => {
         log('Argh! ' + error);
     });
+    
 }
 
 function writeWriteRecursive(cfg, inputCtrl, ctrl_chrc, data_chrc) {
@@ -365,6 +368,9 @@ function writeInputCfg(cfgId, cfg) {
         });
     });
 }
+ function updateSelect(){
+
+ }
 
 function saveInput() {
     //get consoleName and preset name
