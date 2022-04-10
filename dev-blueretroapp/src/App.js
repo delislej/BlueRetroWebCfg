@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
 import { useGamepads } from 'react-gamepads';
@@ -19,22 +18,13 @@ function App() {
             </div>
           ))
         }
-
-<h2>{"axes"}</h2>
-        {gamepads[gamepadId].buttons &&
-          gamepads[gamepadId].axes.map((axes, index) => (
-            <div>
-              {index}: {axes > .3 || axes < -.3 ? axes : ""}
-            </div>
-          ))
-        }
       </div>
     );
   });
 
   return (
     <div className="Gamepads">
-      <h1>Gamepads</h1>
+      <h1>Gamepads 1</h1>
       {gamepadDisplay}
     </div>
   );
