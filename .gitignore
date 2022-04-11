@@ -3,3 +3,6 @@ _site/
 vendor/
 Gemfile.lock
 node_modules
+/dev-*/node_modules/
+/dev-*/build/
+/blueretroapp/
