@@ -1,17 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import * as serviceWorker from "./serviceWorker";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Blueretro from "./components/Blueretro";
+import N64ctrlpak from "./components/N64ctrlpak";
+import Home from "./components/Home";
+import Presets from "./components/Presets";
+import Navigation from "./components/Navigation";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <Router>
+    <Navigation />
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/n64ctrlpak" element={<N64ctrlpak />} />
+      <Route path="/blueretro" element={<Blueretro />} />
+      <Route path="/presets" element={<Presets />} />
+    </Routes>
+  </Router>,
+
+  document.getElementById("root")
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+serviceWorker.unregister();

@@ -34,7 +34,7 @@ function App() {
 
   return (
     <div className="Gamepads">
-      <h1>Gamepads</h1>
+      <h1>Gamepads 1</h1>
       {gamepadDisplay}
     </div>
   );
